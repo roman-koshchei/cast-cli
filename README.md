@@ -1,4 +1,4 @@
-# DO CLI
+# Cast CLI
 
 Personal CLI to do CLI things without boilerplate.
 
