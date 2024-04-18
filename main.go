@@ -38,7 +38,7 @@ func showIntro() {
 	fmt.Println("- push [message] - add files, commit and pushes to git")
 }
 
-func runSystemCommand(name string, args ...string) bool {
+func runSystemCommand(name string, args ...string) {
 	msg := "Executing: " + name
 	for _, arg := range args {
 		msg = msg + " " + arg
@@ -52,10 +52,8 @@ func runSystemCommand(name string, args ...string) bool {
 
 	if err != nil {
 		color.Red("Error: %v\n", err)
-		return false
+		os.Exit(1)
 	}
-
-	return true
 }
 
 func handlePush(args []string) {
@@ -66,26 +64,15 @@ func handlePush(args []string) {
 	}
 
 	message := "\"" + args[2] + "\""
-	if !runSystemCommand("git", "add", ".") {
-		return
-	}
-	if !runSystemCommand("git", "commit", "-m", message) {
-		return
-	}
-	if !runSystemCommand("git", "push") {
-		return
-	}
+	runSystemCommand("git", "add", ".")
+	runSystemCommand("git", "commit", "-m", message)
+	runSystemCommand("git", "push")
 }
 
-func handleJs() error {
+func handleJs() {
 	if _, err := os.Stat("pnpm-lock.yaml"); os.IsNotExist(err) {
-		cmd := exec.Command("npm", "run", "dev")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		return cmd.Run()
+		runSystemCommand("npm", "run", "dev")
+	} else {
+		runSystemCommand("pnpm", "run", "dev")
 	}
-	cmd := exec.Command("pnpm", "run", "dev")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
 }
