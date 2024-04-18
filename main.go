@@ -58,7 +58,7 @@ func runSystemCommand(name string, args ...string) bool {
 	output, err := exec.Command(name, args...).CombinedOutput()
 	if len(output) > 0 {
 		fmt.Println("Output:")
-		fmt.Println(output)
+		fmt.Println(string(output))
 	}
 
 	if err != nil {
