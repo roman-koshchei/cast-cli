@@ -22,22 +22,12 @@ func main() {
 	switch command {
 	case "push":
 		handlePush(args)
+	case "js":
+		handleJs()
+	default:
+		color.Red("Unknown command: %s", command)
+		os.Exit(1)
 	}
-
-	// command := os.Args[1]
-	// switch command {
-	// case "push":
-	// 	handlePush(os.Args)
-	// case "js":
-	// 	err := runJSDev()
-	// 	if err != nil {
-	// 		color.Red("Error running dev server: %v\n", err)
-	// 		os.Exit(1)
-	// 	}
-	// default:
-	// 	color.Red("Unknown command: %s\n", os.Args[1])
-	// 	os.Exit(1)
-	// }
 }
 
 func showIntro() {
@@ -51,7 +41,7 @@ func showIntro() {
 func runSystemCommand(name string, args ...string) bool {
 	fmt.Printf("Executing: %s ", name)
 	for _, arg := range args {
-		fmt.Print(arg)
+		fmt.Printf("%s ", arg)
 	}
 	fmt.Println()
 
@@ -89,21 +79,13 @@ func handlePush(args []string) {
 	}
 }
 
-func runJSDev() error {
+func handleJs() error {
 	if _, err := os.Stat("pnpm-lock.yaml"); os.IsNotExist(err) {
-		return runNPMDev()
+		cmd := exec.Command("npm", "run", "dev")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		return cmd.Run()
 	}
-	return runPNPMDev()
-}
-
-func runNPMDev() error {
-	cmd := exec.Command("npm", "run", "dev")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
-}
-
-func runPNPMDev() error {
 	cmd := exec.Command("pnpm", "run", "dev")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
