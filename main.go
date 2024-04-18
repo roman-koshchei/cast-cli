@@ -4,35 +4,69 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/fatih/color"
 )
 
-func main() {
-	// if len(os.Args) < 2 {
-	// 	fmt.Println("Usage: cast <command> [args]")
-	// 	os.Exit(1)
-	// }
+// args = {program name} {command} {args}
 
-	for _, item := range os.Args {
-		fmt.Println(item)
+func main() {
+	args := os.Args
+
+	if len(args) < 2 {
+		showIntro()
+		return
 	}
 
-	command := os.Args[1]
+	command := args[1]
 	switch command {
 	case "push":
-		handlePush(os.Args)
-	case "js":
-		err := runJSDev()
-		if err != nil {
-			color.Red("Error running dev server: %v\n", err)
-			os.Exit(1)
-		}
-	default:
-		color.Red("Unknown command: %s\n", os.Args[1])
-		os.Exit(1)
+		handlePush(args)
 	}
+
+	// command := os.Args[1]
+	// switch command {
+	// case "push":
+	// 	handlePush(os.Args)
+	// case "js":
+	// 	err := runJSDev()
+	// 	if err != nil {
+	// 		color.Red("Error running dev server: %v\n", err)
+	// 		os.Exit(1)
+	// 	}
+	// default:
+	// 	color.Red("Unknown command: %s\n", os.Args[1])
+	// 	os.Exit(1)
+	// }
+}
+
+func showIntro() {
+	color.Green("Usage: cast [command] [args]")
+	fmt.Println()
+	color.Green("Commands:")
+	fmt.Println()
+	fmt.Println("- push [message] - add files, commit and pushes to git")
+}
+
+func runSystemCommand(name string, args ...string) bool {
+	fmt.Printf("Executing: %s ", name)
+	for _, arg := range args {
+		fmt.Print(arg)
+	}
+	fmt.Println()
+
+	output, err := exec.Command(name, args...).CombinedOutput()
+	if len(output) > 0 {
+		fmt.Println("Output:")
+		fmt.Println(output)
+	}
+
+	if err != nil {
+		color.Red("Error: %v\n", err)
+		return false
+	}
+
+	return true
 }
 
 func handlePush(args []string) {
@@ -42,47 +76,17 @@ func handlePush(args []string) {
 		os.Exit(1)
 	}
 
-	message := strings.Join(os.Args[2:], " ")
-	err := gitPush(message)
-	if err != nil {
-		color.Red("Error: %v\n", err)
-		os.Exit(1)
-	}
-}
+	message := args[2]
 
-func gitPush(message string) error {
-	cmd := exec.Command("git", "add", ".")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		color.Red("Error adding files: %v\n", err)
-		color.Red("Output: %s\n", string(output))
-		return err
+	if !runSystemCommand("git", "add", ".") {
+		return
 	}
-	color.Green("Added files successfully\n")
-	color.Green("Output: %s\n", string(output))
-
-	cmd = exec.Command("git", "commit", "-m", message)
-	output, err = cmd.CombinedOutput()
-	if err != nil {
-		color.Red("Error committing changes: %v\n", err)
-		color.Red("Output: %s\n", string(output))
-		return err
+	if !runSystemCommand("git", "commit", "-m", message) {
+		return
 	}
-	color.Green("Committed changes successfully\n")
-	color.Green("Output: %s\n", string(output))
-
-	cmd = exec.Command("git", "push")
-	output, err = cmd.CombinedOutput()
-	if err != nil {
-		color.Red("Error pushing changes: %v\n", err)
-		color.Red("Output: %s\n", string(output))
-		return err
+	if !runSystemCommand("git", "push") {
+		return
 	}
-	color.Green("Pushed changes successfully\n")
-	color.Green("Output: %s\n", string(output))
-
-	fmt.Println("Pushed changes with message:", message)
-	return nil
 }
 
 func runJSDev() error {
