@@ -44,12 +44,12 @@ func runSystemCommand(name string, args ...string) bool {
 		fmt.Printf("%s ", arg)
 	}
 	fmt.Println()
+	fmt.Println()
 
-	output, err := exec.Command(name, args...).CombinedOutput()
-	if len(output) > 0 {
-		fmt.Println("Output: ")
-		fmt.Println(string(output))
-	}
+	cmd := exec.Command(name, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
 
 	if err != nil {
 		color.Red("Error: %v\n", err)
