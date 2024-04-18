@@ -15,7 +15,7 @@ func main() {
 	// 	os.Exit(1)
 	// }
 
-	for item := range os.Args {
+	for _, item := range os.Args {
 		fmt.Println(item)
 	}
 
