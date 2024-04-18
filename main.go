@@ -9,14 +9,14 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: do <command> [args]")
+		fmt.Println("Usage: cast <command> [args]")
 		os.Exit(1)
 	}
 
 	switch os.Args[1] {
 	case "push":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: do push <message>")
+			fmt.Println("Usage: cast push <message>")
 			os.Exit(1)
 		}
 		message := strings.Join(os.Args[2:], " ")
