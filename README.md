@@ -2,6 +2,20 @@
 
 Personal CLI to do CLI things without boilerplate.
 
+## Development
+
+Build command:
+
+```
+go build -o bin/cast
+```
+
+If CLI isn't updated in Windows system, then make sure it's correct one by running:
+
+```powershell
+Get-Command cast
+```
+
 ## Set of commands
 
 ### cast push "{msg}"

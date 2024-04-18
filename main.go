@@ -34,8 +34,8 @@ func showIntro() {
 	color.Green("Usage: cast [command] [args]")
 	fmt.Println()
 	color.Green("Commands:")
-	fmt.Println()
 	fmt.Println("- push [message] - add files, commit and pushes to git")
+	fmt.Println()
 }
 
 func runSystemCommand(name string, args ...string) {
