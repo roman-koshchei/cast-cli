@@ -39,12 +39,11 @@ func showIntro() {
 }
 
 func runSystemCommand(name string, args ...string) bool {
-	fmt.Printf("Executing: %s ", name)
+	msg := "Executing: " + name
 	for _, arg := range args {
-		fmt.Printf("%s ", arg)
+		msg = msg + " " + arg
 	}
-	fmt.Println()
-	fmt.Println()
+	color.Yellow(msg)
 
 	cmd := exec.Command(name, args...)
 	cmd.Stdout = os.Stdout
@@ -66,7 +65,7 @@ func handlePush(args []string) {
 		os.Exit(1)
 	}
 
-	message := args[2]
+	message := "\"" + args[2] + "\""
 	if !runSystemCommand("git", "add", ".") {
 		return
 	}
