@@ -34,3 +34,26 @@ npm run dev
 ### do safari
 
 Opens safari browser using [Playwright](https://playwright.dev/docs/browsers#webkit)
+
+
+## Default Outputs
+
+```
+PS C:\Work\rk\cast> git add .
+PS C:\Work\rk\cast> git commit -m "cast"      
+[main be614b9] cast
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Work\rk\cast> git push
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 20 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 289 bytes | 289.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+remote: This repository moved. Please use the new location:
+remote:   https://github.com/roman-koshchei/cast-cli.git
+To https://github.com/roman-koshchei/do.git
+   5da2c33..be614b9  main -> main
+PS C:\Work\rk\cast>
+```

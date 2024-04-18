@@ -5,68 +5,103 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: cast <command> [arguments]")
-		os.Exit(1)
+	// if len(os.Args) < 2 {
+	// 	fmt.Println("Usage: cast <command> [args]")
+	// 	os.Exit(1)
+	// }
+
+	for item := range os.Args {
+		fmt.Println(item)
 	}
 
-	switch os.Args[1] {
+	command := os.Args[1]
+	switch command {
 	case "push":
-		if len(os.Args) < 3 {
-			fmt.Println("Usage: cast push <message>")
-			os.Exit(1)
-		}
-		message := strings.Join(os.Args[2:], " ")
-		err := gitPush(message)
+		handlePush(os.Args)
+	case "js":
+		err := runJSDev()
 		if err != nil {
-			fmt.Println("Error:", err)
+			color.Red("Error running dev server: %v\n", err)
 			os.Exit(1)
 		}
 	default:
-		fmt.Println("Unknown command:", os.Args[1])
+		color.Red("Unknown command: %s\n", os.Args[1])
 		os.Exit(1)
 	}
 }
 
-func handlePush() {
+func handlePush(args []string) {
+	if len(args) < 3 {
+		color.Red("Error: Message is required as third argument")
+		fmt.Println("Example: cast push \"update readme\"")
+		os.Exit(1)
+	}
 
+	message := strings.Join(os.Args[2:], " ")
+	err := gitPush(message)
+	if err != nil {
+		color.Red("Error: %v\n", err)
+		os.Exit(1)
+	}
 }
 
 func gitPush(message string) error {
 	cmd := exec.Command("git", "add", ".")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("Error adding files to git:", err)
-		fmt.Println("Output:", output)
+		color.Red("Error adding files: %v\n", err)
+		color.Red("Output: %s\n", string(output))
 		return err
 	}
-	
-	fmt.Println("Added files successfully")
-	fmt.Println("Output:", string(output))
+	color.Green("Added files successfully\n")
+	color.Green("Output: %s\n", string(output))
 
 	cmd = exec.Command("git", "commit", "-m", message)
 	output, err = cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("Error committing changes:", err)
-		fmt.Println("Output:", string(output))
+		color.Red("Error committing changes: %v\n", err)
+		color.Red("Output: %s\n", string(output))
 		return err
 	}
-	fmt.Println("Committed changes successfully")
-	fmt.Println("Output:", string(output))
+	color.Green("Committed changes successfully\n")
+	color.Green("Output: %s\n", string(output))
 
 	cmd = exec.Command("git", "push")
 	output, err = cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("Error pushing changes:", err)
-		fmt.Println("Output:", string(output))
+		color.Red("Error pushing changes: %v\n", err)
+		color.Red("Output: %s\n", string(output))
 		return err
 	}
-	fmt.Println("Pushed changes successfully")
-	fmt.Println("Output:", string(output))
+	color.Green("Pushed changes successfully\n")
+	color.Green("Output: %s\n", string(output))
 
 	fmt.Println("Pushed changes with message:", message)
 	return nil
+}
+
+func runJSDev() error {
+	if _, err := os.Stat("pnpm-lock.yaml"); os.IsNotExist(err) {
+		return runNPMDev()
+	}
+	return runPNPMDev()
+}
+
+func runNPMDev() error {
+	cmd := exec.Command("npm", "run", "dev")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func runPNPMDev() error {
+	cmd := exec.Command("pnpm", "run", "dev")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
