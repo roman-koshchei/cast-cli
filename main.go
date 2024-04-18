@@ -9,7 +9,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: cast <command> [args]")
+		fmt.Println("Usage: cast <command> [arguments]")
 		os.Exit(1)
 	}
 
@@ -31,14 +31,19 @@ func main() {
 	}
 }
 
+func handlePush() {
+
+}
+
 func gitPush(message string) error {
 	cmd := exec.Command("git", "add", ".")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("Error adding files:", err)
-		fmt.Println("Output:", string(output))
+		fmt.Println("Error adding files to git:", err)
+		fmt.Println("Output:", output)
 		return err
 	}
+	
 	fmt.Println("Added files successfully")
 	fmt.Println("Output:", string(output))
 
