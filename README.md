@@ -4,7 +4,7 @@ Personal CLI to do CLI things without boilerplate.
 
 ## Set of commands
 
-### do push "{msg}"
+### cast push "{msg}"
 
 Perform usual line of commands for git push:
 
@@ -14,7 +14,7 @@ git commit -m "{msg}"
 git push
 ```
 
-### do dev
+### cast dev
 
 Identifies which programming language and which command is used to run project.
 And then run project. To avoid process of checking which one to use in which project.
@@ -31,16 +31,15 @@ If project has file `npm-lock.json` then:
 npm run dev
 ```
 
-### do safari
+### cast safari
 
 Opens safari browser using [Playwright](https://playwright.dev/docs/browsers#webkit)
-
 
 ## Default Outputs
 
 ```
 PS C:\Work\rk\cast> git add .
-PS C:\Work\rk\cast> git commit -m "cast"      
+PS C:\Work\rk\cast> git commit -m "cast"
 [main be614b9] cast
  1 file changed, 1 insertion(+), 1 deletion(-)
 PS C:\Work\rk\cast> git push
