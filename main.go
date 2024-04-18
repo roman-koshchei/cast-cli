@@ -47,7 +47,7 @@ func runSystemCommand(name string, args ...string) bool {
 
 	output, err := exec.Command(name, args...).CombinedOutput()
 	if len(output) > 0 {
-		fmt.Println("Output:")
+		fmt.Println("Output: ")
 		fmt.Println(string(output))
 	}
 
@@ -67,7 +67,6 @@ func handlePush(args []string) {
 	}
 
 	message := args[2]
-
 	if !runSystemCommand("git", "add", ".") {
 		return
 	}
