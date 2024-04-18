@@ -33,22 +33,34 @@ func main() {
 
 func gitPush(message string) error {
 	cmd := exec.Command("git", "add", ".")
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println("Error adding files:", err)
+		fmt.Println("Output:", string(output))
 		return err
 	}
+	fmt.Println("Added files successfully")
+	fmt.Println("Output:", string(output))
 
 	cmd = exec.Command("git", "commit", "-m", message)
-	err = cmd.Run()
+	output, err = cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println("Error committing changes:", err)
+		fmt.Println("Output:", string(output))
 		return err
 	}
+	fmt.Println("Committed changes successfully")
+	fmt.Println("Output:", string(output))
 
 	cmd = exec.Command("git", "push")
-	err = cmd.Run()
+	output, err = cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println("Error pushing changes:", err)
+		fmt.Println("Output:", string(output))
 		return err
 	}
+	fmt.Println("Pushed changes successfully")
+	fmt.Println("Output:", string(output))
 
 	fmt.Println("Pushed changes with message:", message)
 	return nil
