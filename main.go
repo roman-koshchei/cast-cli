@@ -63,9 +63,8 @@ func handlePush(args []string) {
 		os.Exit(1)
 	}
 
-	message := "\"" + args[2] + "\""
 	runSystemCommand("git", "add", ".")
-	runSystemCommand("git", "commit", "-m", message)
+	runSystemCommand("git", "commit", "-m", args[2])
 	runSystemCommand("git", "push")
 }
 
